@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CloudFormation template for creating a task definition"
+Resources:
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - "FARGATE"
+      ExecutionRoleArn: "arn:aws:iam::266842636661:role/ecsTaskExecutionRole"
+      Cpu: 512
+      Memory: 1024
+      NetworkMode: "awsvpc"
+      ContainerDefinitions:
+        - Name: "impex-1"
+          Image: "266842636661.dkr.ecr.us-east-1.amazonaws.com/myapp4:v1"
+          MemoryReservation: 512
+          Memory: 1024
+          PortMappings:
+            - ContainerPort: 80
+              Protocol: tcp

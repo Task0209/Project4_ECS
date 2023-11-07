@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CloudFormation template for creating a Service"
+MyECSService:
+    Type: AWS::ECS::Service
+    DependsOn:
+      - Listener
+    Properties:
+      LaunchType: FARGATE
+      Cluster: !ImportValue 'ECSCluster'
+      DesiredCount: 3
+      TaskDefinition: !ImportValue 'TaskDefinition'
+      DeploymentConfiguration:
+        MaximumPercent: 100
+        MinimumHealthyPercent: 0
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups: !ImportValue 'Alb2FargateContainers'
+          Subnets: ['subnet-6b723c0c','subnet-4fbbf013','subnet-7e7a2f50']
+      LoadBalancers:
+        - TargetGroupArn: !ImportValue 'FargateTargetGroup'
+          ContainerPort: 80
+          ContainerName: impex-1

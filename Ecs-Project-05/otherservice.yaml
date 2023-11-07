@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  FargateTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Name: impextargetgroup
+      VpcId: vpc-19c15b63
+      Protocol: HTTP
+      Port: 80
+      HealthCheckPath: /
+      TargetType: ip
+  Listener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref FargateTargetGroup
+          Type: forward
+      LoadBalancerArn: !ImportValue LoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+Outputs:
+
+  FargateTargetGroup:
+    Description: FargateTargetGroup
+    Value: !Ref FargateTargetGroup
+    Export:
+      Name: 'FargateTargetGroup'
